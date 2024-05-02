@@ -33,8 +33,21 @@ const getSingleUser = async (req: Request, res: Response) => {
   }
 };
 
+const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    console.log(email, password);
+    const result = await User.findOne({ email: email });
+
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(200).json(error);
+  }
+};
+
 export const UserController = {
   createUser,
   getSingleUser,
   getAllUsers,
+  loginUser,
 };

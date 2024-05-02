@@ -16,7 +16,7 @@ const userChats = async (req: Request, res: Response) => {
   try {
     const chat = await Chat.find({
       participants: { $in: [req.params.userId] },
-    });
+    }).populate("participants");
 
     res.status(200).json(chat);
   } catch (error) {

@@ -5,9 +5,9 @@ const socket = (io: Server) => {
   io.on("connection", (socket) => {
     console.log("A user connected");
     // Handle joining a chat room
-    socket.on("joinChat", (data) => {
-      console.log(data.chatId);
-      socket.join(data.chatId);
+    socket.on("joinChat", (chatId) => {
+      console.log("chatId", chatId);
+      socket.join(chatId);
     });
 
     // Handle sending a message
@@ -19,7 +19,7 @@ const socket = (io: Server) => {
       newMessage.save();
 
       // Broadcast the message to the chat room
-      io.to(chatId).emit("sendMessage", newMessage);
+      io.to(chatId).emit("receiveMessage", newMessage);
     });
 
     //disconnect socket

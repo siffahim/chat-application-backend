@@ -15,7 +15,7 @@ const createMessage = async (req: Request, res: Response) => {
 const getMessages = async (req: Request, res: Response) => {
   try {
     const chatId = req.params.chatId;
-    console.log(chatId);
+
     const result = await Message.find({ chatId });
 
     res.status(200).json(result);
