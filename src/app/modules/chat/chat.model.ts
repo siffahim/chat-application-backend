@@ -3,10 +3,12 @@ import { IChat } from "./chat.interface";
 
 const chatSchema = new Schema<IChat>(
   {
-    members: {
-      type: [String],
-      required: true,
-    },
+    participants: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );

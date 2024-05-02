@@ -3,8 +3,8 @@ import { Chat } from "./chat.model";
 
 const createChat = async (req: Request, res: Response) => {
   try {
-    const payload = { members: [req.body.senderId, req.body.receiverId] };
-    const result = await Chat.create(payload);
+    const { participantIds } = req.body;
+    const result = await Chat.create({ participants: participantIds });
 
     res.status(200).json(result);
   } catch (error) {
@@ -14,7 +14,9 @@ const createChat = async (req: Request, res: Response) => {
 
 const userChats = async (req: Request, res: Response) => {
   try {
-    const chat = await Chat.find({ members: { $in: [req.params.userId] } });
+    const chat = await Chat.find({
+      participants: { $in: [req.params.userId] },
+    });
 
     res.status(200).json(chat);
   } catch (error) {
@@ -25,7 +27,7 @@ const userChats = async (req: Request, res: Response) => {
 const findChat = async (req: Request, res: Response) => {
   try {
     const chat = await Chat.findOne({
-      members: { $all: [req.params.firstId, req.params.secondId] },
+      participants: { $all: [req.params.firstId, req.params.secondId] },
     });
 
     res.status(200).json(chat);

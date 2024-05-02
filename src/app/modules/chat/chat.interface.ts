@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 export type IChat = {
-  members: string[];
+  participants: Types.ObjectId[];
 };
