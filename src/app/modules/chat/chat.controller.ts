@@ -4,7 +4,14 @@ import { Chat } from "./chat.model";
 const createChat = async (req: Request, res: Response) => {
   try {
     const { participantIds } = req.body;
-    const result = await Chat.create({ participants: participantIds });
+    let result;
+    const isExistParticipantIds = await Chat.findOne({
+      participants: { $all: [...participantIds] },
+    });
+    result = isExistParticipantIds;
+    if (!isExistParticipantIds) {
+      result = await Chat.create({ participants: participantIds });
+    }
 
     res.status(200).json(result);
   } catch (error) {
