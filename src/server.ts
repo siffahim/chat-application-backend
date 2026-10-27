@@ -1,28 +1,36 @@
 import mongoose from "mongoose";
+import { createServer } from "http";
 import { Server } from "socket.io";
 import app from "./app";
+import { config } from "./config/env";
 import { SocketHelper } from "./helpers/socketHelper";
 
-let server;
 async function main() {
   try {
-    await mongoose.connect("mongodb://127.0.0.1:27017/chat-design");
-    console.log("Successfully Connected to Database");
+    await mongoose.connect(config.mongoUri);
+    console.log("Successfully connected to database");
 
-    server = app.listen(5000, "192.168.10.16", () => {
-      console.log("Application listen on port:5000");
-    });
-
-    //socket handle here
+    const server = createServer(app);
     const io = new Server(server, {
       pingTimeout: 60000,
       cors: {
-        origin: "*",
+        origin: config.corsOrigin
+          .split(",")
+          .map((origin) => origin.trim())
+          .filter(Boolean),
+        credentials: true,
+        methods: ["GET", "POST"],
       },
     });
+
     SocketHelper.socket(io);
+
+    server.listen(config.port, config.host, () => {
+      console.log(`Application listening on port:${config.port}`);
+    });
   } catch (error) {
-    console.log("Failed to connect Database", error);
+    console.error("Failed to connect to database", error);
+    process.exit(1);
   }
 }
 
